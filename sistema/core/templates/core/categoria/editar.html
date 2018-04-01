@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+ <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'home' %}">Dashboard</a>
+        </li>
+
+        <li class="breadcrumb-item">
+          <a href="{% url 'categorias' %}">Categoria</a>
+        </li>
+         <li class="breadcrumb-item active">Editar</li>
+      </ol>
+<div class="row">
+	<div class="col-md-12">
+		<h2 class="fa fa-truck fa-2x">  Categoria</h2>
+	</div>
+</div>
+{% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+{% endfor %}
+<div class="card">
+  <div class="card-header">
+    
+  </div>
+  <div class="card-body">
+    <h5 class="card-title"></h5>
+    <p class="card-text">
+    	{% include "core/formulario.html" %}
+    </p>
+  </div>
+</div>
+
+
+	
+
+
+{% endblock %}

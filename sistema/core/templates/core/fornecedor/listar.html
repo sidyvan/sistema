@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% block content %}
+ <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'home' %}">Dashboard</a>
+        </li>
+         <li class="breadcrumb-item active">Fornecedores</li>
+      </ol>
+<div class="row">
+	<div class="col-md-6">
+		<h2 class="fa fa-truck fa-2x">  Fornecedores</h2>
+	</div>
+	<div class="col-md-6 text-right">
+		<a href="{% url 'criar_fornecedor' %}" class="btn btn-dark">Novo</a>
+	</div>
+</div>
+<hr>
+
+  <form method="POST"> {% csrf_token %}
+    <div class="row">
+    	<div class="col-md-10">
+    		<input type="text" name="q" class="form-control" placeholder="Pesquisar">
+    	</div>
+    	<div class="col-md-2">
+    		<button type="submit" class="btn btn-light fa fa-search"></button>
+    	</div>
+    </div>
+  </form>
+
+<hr>
+<table class="table table-striped ">
+  <thead>
+    <tr>
+      <th scope="col">CNPJ/CPF</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Cidade</th>
+      <th scope="col" ></th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for l in lista %}
+    <tr>
+      <th scope="row">{{ l.cnpj_cpf }}</th>
+      <td>{{ l.nome }}</td>
+      <td>{{ l.cidade }}</td>
+      <td class="text-right">
+      	<a href="{% url 'fornecedor_detalhe' l.slug %}" class="btn btn-light btn-sm fa fa-eye" title="Ver Detalhe"></a>
+      </td>
+    </tr>
+   	{% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if lista.has_previous %}
+            <a href="?page={{ lista.previous_page_number }}">anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Página {{ lista.number }} de {{ lista.paginator.num_pages }}.
+        </span>
+
+        {% if lista.has_next %}
+            <a href="?page={{ lista.next_page_number }}">próxima</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

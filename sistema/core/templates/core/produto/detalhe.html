@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% block content %}
+ <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+
+        <li class="breadcrumb-item">
+          <a href="{% url 'produtos' %}">Produtos</a>
+        </li>
+        <li class="breadcrumb-item active">Detalhe</li>
+      </ol>
+
+<h2 class="fa fa-shopping-bag fa-2x">  Produto Detalhe</h2>
+<hr>
+
+<div class="row">
+  <div class="col-md-8">
+    <p>Código :<b> {{ produto.codigo_barras }}</b></p>
+    <p>Produto :<b> {{ produto.nome }}</b></p>
+    <p>Quantidade em Estoque :<b> {{ produto.quantidade }}</b></p>
+    <p>Produto :<b> {{ produto.nome }}</b></p>
+    {% if produto.peso %}
+    <p>Peso :<b> {{ produto.peso }}</b></p>
+    {% else %}
+    {% endif %}
+    <p>Valor de Compra por unidade :<b> {{ produto.valor_compra }}</b></p>
+    <p>Valor de Venda por unidade :<b> {{ produto.valor_venda }}</b></p>
+    <p>Lucro por unidade:<b> {{ lucro }}</b></p>
+    <p>Lucro Total:<b> {{ lucro_total }}</b></p>
+    <p>Capital:<b> {{ valor_capital }}</b></p>
+  </div>
+  <div class="col-md-4">
+    <div class="card" >
+      <div class="card-body">
+        <h5 class="card-title"></h5>
+        <p class="card-text">Criado por: {{ produto.criado_por }}</p>
+        <p class="card-text">Criado em: {{ produto.criado_em }}</p>
+        {% if produto.editado_por %}
+          <p class="card-text">Ultimo usuário que editou: {{ produto.editado_por }}</p>
+          <p class="card-text">Ultima edição em: {{ produto.editado_em }}</p>
+        {% else %}
+        {% endif %}
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-12 text-right">
+    <a href="{% url 'editar_produto' produto.slug %}" class="btn btn-warning">Editar</a>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger text-" data-toggle="modal" data-target="#exampleModal">
+      Deletar
+    </button>
+
+
+    
+  </div>
+</div>
+
+ <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Remover produto</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger">
+              Atenção! Você removerá o produto <b>{{ produto.nome }}</b> da sua base de dados!
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+
+            <a href="{% url 'remove_produto' produto.slug %}" class="btn btn-danger">Deletar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

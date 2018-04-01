@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+ <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+
+        <li class="breadcrumb-item">
+          <a href="{% url 'clientes' %}">Clientes</a>
+        </li>
+        <li class="breadcrumb-item active">Detalhe</li>
+      </ol>
+
+<h2 class="fa fa-group fa-2x">  Cliente Detalhe</h2>
+<hr>
+
+<div class="row">
+
+  <div class="col-md-2">
+
+    <img class="img-fluid" src="{{ cliente.foto.url }}"/>
+  </div>
+  <div class="col-md-6">
+    <p>CNPJ / CPF :<b> {{ cliente.cpf_cnpj }}</b></p>
+    <p>Nome / Razão Social :<b> {{ cliente.nome }}</b></p>
+    <p>Cidade :<b> {{ cliente.cidade }}</b></p>
+    <p>Telefone :<b> {{ cliente.fone }}</b></p>
+    <p>Email :<b> {{ cliente.email }}</b></p>
+  </div>
+  <div class="col-md-4">
+
+
+
+    <div class="card" >
+      <div class="card-body">
+        <h5 class="card-title"></h5>
+        <p class="card-text">Criado por: {{ cliente.criado_por }}</p>
+        <p class="card-text">Criado em: {{ cliente.criado_em }}</p>
+        {% if cliente.editado_por %}
+          <p class="card-text">Ultimo usuário que editou: {{ cliente.editado_por }}</p>
+          <p class="card-text">Ultima edição em: {{ cliente.editado_em }}</p>
+        {% else %}
+        {% endif %}
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-12 text-right">
+    <a href="{% url 'editar_cliente' cliente.slug %}" class="btn btn-warning">Editar</a>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-danger text-" data-toggle="modal" data-target="#exampleModal">
+      Deletar
+    </button>
+
+
+    
+  </div>
+</div>
+
+ <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Remover Cliente</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger">
+              Atenção! Você removerá o cliente <b>{{ cliente.nome }}</b> da sua base de dados!
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+
+            <a href="{% url 'remove_cliente' cliente.slug %}" class="btn btn-danger">Deletar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
