@@ -3,7 +3,7 @@
  <!-- Breadcrumbs-->
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="#">Dashboard</a>
+          <a href="{% url 'home' %}">Dashboard</a>
         </li>
 
         <li class="breadcrumb-item">
@@ -12,17 +12,73 @@
         <li class="breadcrumb-item active">Detalhe</li>
       </ol>
 
-<h2 class="fa fa-truck fa-2x">  Fornecedores Detalhe</h2>
+<h2 class="fa fa-truck fa-2x">  Fornecedor Detalhe</h2>
 <hr>
 
 <div class="row">
   <div class="col-md-8">
+
+    {% if fornecedor.pessoa_juridica == True %}
+      <p>Tipo: Pessoa Jurídica </p>
+
+
+    {% endif %}
+    <p>Nome  :<b> {{ fornecedor.nome_fantasia }}</b></p>
+
+
+
+    {% if fornecedor.nome_razao_social %}
+    <p>Razão Social :<b> {{ fornecedor.nome_razao_social }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.cpf %}
+    <p>CPF :<b> {{ fornecedor.cpf }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.cnpj %}
     <p>Nome / Razão Social :<b> {{ fornecedor.nome }}</b></p>
-    <p>CNPJ / CPF :<b> {{ fornecedor.cnpj_cpf }}</b></p>
-    <p>Nome / Razão Social :<b> {{ fornecedor.nome }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.inscricao_estadual %}
+    <p>Inscrição Estadual :<b> {{ fornecedor.inscricao_estadual }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.rua_endereco %}
+    <p>Rua :<b> {{ fornecedor.rua_endereco }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.numero_endereco %}
+    <p>Número :<b> {{ fornecedor.numero_endereco }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.bairro %}
+    <p>Bairro :<b> {{ fornecedor.bairro }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.cidade %}
     <p>Cidade :<b> {{ fornecedor.cidade }}</b></p>
+    {% endif %}
+
+    {% if  fornecedor.complemento_end %}
+    <p>Complemento :<b> {{ fornecedor.complemento_end }}</b></p>
+    {% endif %}
+
+    {% if  fornecedor.cep %}
+    <p>CEP :<b> {{ fornecedor.cep }}</b></p>
+    {% endif %}
+
+    {% if  fornecedor.codigo_ibge_cidade %}
+    <p>IBGE :<b> {{ fornecedor.codigo_ibge_cidade }}</b></p>
+    {% endif %}
+
+    {% if  fornecedor.fone %}
     <p>Telefone :<b> {{ fornecedor.fone }}</b></p>
+    {% endif %}
+
+    {% if fornecedor.email %}
     <p>Email :<b> {{ fornecedor.email }}</b></p>
+    {% endif %}
+
   </div>
   <div class="col-md-4">
 
@@ -47,14 +103,17 @@
 <hr>
 <div class="row">
   <div class="col-md-12 text-right">
-    <a href="{% url 'editar_fornecedor' fornecedor.slug %}" class="btn btn-warning">Editar</a>
+    {% if fornecedor.pessoa_juridica == True %}
+      <a href="{% url 'editar_fornecedor_pessoa_juridica' fornecedor.slug %}" class="btn btn-warning">Editar</a>
+
+    {% elif  fornecedor.pessoa_juridica == False  %}
+      <a href="{% url 'editar_fornecedor_pessoa_fisica' fornecedor.slug %}" class="btn btn-warning">Editar</a>
+    {% endif %}
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-danger text-" data-toggle="modal" data-target="#exampleModal">
       Deletar
     </button>
 
-
-    
   </div>
 </div>
 

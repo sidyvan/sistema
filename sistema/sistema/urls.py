@@ -26,22 +26,31 @@ urlpatterns = [
     # Rota para a Tele Principal
     url(r'^$', views.home, name='home'),
 
-    ####################################################################################################
-    #################################### USUARIO ########################################################
-    ####################################################################################################
-
 
     #url(r'^login/$', auth_views.login, name='login'),
     url(r'^login/$', auth_views.login, {'template_name': 'core/usuario/login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout,{'next_page': '/login'}, name='logout'),
+
+    ####################################################################################################
+    #################################### VENDA ########################################################
+    ####################################################################################################
+    url(r'^cabecalho-nfe/$', views.cabecalho_nfe, name='cabecalho_nfe'),
+    url(r'^itens-nfe/(?P<slug>[\w-]+)/$', views.itens_nfe , name='itens_nfe'),
     ####################################################################################################
     #################################### FORNECEDOR ####################################################
     ####################################################################################################
     url(r'^fornecedores/$', views.fornecedores, name='fornecedores'),
     url(r'^criar-fornecedor/$', views.criar_fornecedor, name='criar_fornecedor'),
+    url(r'^criar-fornecedor-pessoa-juridicar/$', views.criar_fornecedor_pessoa_juridica, name='criar_fornecedor_pessoa_juridica'),
     url(r'^fornecedor-detalhe/(?P<slug>[\w-]+)/$', views.fornecedor_detalhe , name='fornecedor_detalhe'),
     url(r'^remove-fornecedor/(?P<slug>[\w-]+)/$', views.remove_fornecedor , name='remove_fornecedor'),
     url(r'^editar-fornecedor/(?P<slug>[\w-]+)/$', views.editar_fornecedor , name='editar_fornecedor'),
+
+    url(r'^editar-fornecedor-pessoa-juridica/(?P<slug>[\w-]+)/$', views.editar_fornecedor_pessoa_juridica , name='editar_fornecedor_pessoa_juridica'),
+
+    url(r'^editar-fornecedor-pessoa-fisica/(?P<slug>[\w-]+)/$', views.editar_fornecedor_pessoa_fisica , name='editar_fornecedor_pessoa_fisica'),
+    url(r'^criar-fornecedor-pessoa-fisica/$', views.criar_fornecedor_pessoa_fisica, name='criar_fornecedor_pessoa_fisica'),
+
     ####################################################################################################
     ################################### PRODUTO ########################################################
     ####################################################################################################

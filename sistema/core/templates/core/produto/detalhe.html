@@ -3,7 +3,7 @@
  <!-- Breadcrumbs-->
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="#">Dashboard</a>
+          <a href="{% url 'home' %}">Dashboard</a>
         </li>
 
         <li class="breadcrumb-item">
@@ -16,20 +16,19 @@
 <hr>
 
 <div class="row">
-  <div class="col-md-8">
-    <p>Código :<b> {{ produto.codigo_barras }}</b></p>
-    <p>Produto :<b> {{ produto.nome }}</b></p>
-    <p>Quantidade em Estoque :<b> {{ produto.quantidade }}</b></p>
-    <p>Produto :<b> {{ produto.nome }}</b></p>
-    {% if produto.peso %}
-    <p>Peso :<b> {{ produto.peso }}</b></p>
-    {% else %}
-    {% endif %}
+  <div class="col-md-4">
+    <img src="{{ produto.imagem.url }}" alt="..." class="img-thumbnail">
+  </div>
+  <div class="col-md-4">
+
+    <p>Código :<b> {{ produto.codigo_de_barras }}</b></p>
+    <p>Produto :<b> {{ produto.descricao }}</b></p>
     <p>Valor de Compra por unidade :<b> {{ produto.valor_compra }}</b></p>
     <p>Valor de Venda por unidade :<b> {{ produto.valor_venda }}</b></p>
     <p>Lucro por unidade:<b> {{ lucro }}</b></p>
     <p>Lucro Total:<b> {{ lucro_total }}</b></p>
     <p>Capital:<b> {{ valor_capital }}</b></p>
+
   </div>
   <div class="col-md-4">
     <div class="card" >
@@ -58,7 +57,7 @@
     </button>
 
 
-    
+
   </div>
 </div>
 

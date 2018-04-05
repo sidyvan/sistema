@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.shortcuts import render, redirect
-from .models import Fornecedor, Produto, Categoria, Cliente
+from .models import Fornecedor, Produto, Categoria, Cliente, CabecalhoNfe
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.db.models import Q
-from .forms import FornecedorForm, ProdutoForm, CategoriaForm, ClienteForm
+from .forms import CabecalhoNfeForm, FornecedorForm, ProdutoForm, CategoriaForm, ClienteForm, FornecedorPessoaJuridicaForm, FornecedorPessoaFisicaForm, ClientePessoaJuridicaForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
@@ -20,14 +20,33 @@ def home(request):
 	return render(request, 'core/home.html')
 
 #####################################################################
-##################### Usuário #######################################
+##################### Venda #########################################
 #####################################################################
+
+@login_required(login_url="/login")
+def cabecalho_nfe(request):
+	form = CabecalhoNfeForm(request.POST or None)
+	if request.method == 'POST':
+		if form.is_valid():
+			salvar = form.save(commit=False)
+			salvar.criado_por = request.user
+			salvar.slug = slugify(salvar.numero_nfe)
+			salvar.save()
+			return redirect('itens_nfe', slug=salvar.slug)
+		else:
+			return render(request, 'core/venda/cabecalho_pedido.html', {'form':form})
+	else:
+		return render(request, 'core/venda/cabecalho_pedido.html', {'form':form})
+
+@login_required(login_url="/login")
+def itens_nfe(request, slug):
+	cabecalho_nfe = get_object_or_404(CabecalhoNfe, slug=slug)
+	return render(request, 'core/venda/itens_pedido.html', {'cabecalho_nfe':cabecalho_nfe})
 
 
 #####################################################################
 ##################### Fornecedores ##################################
 #####################################################################
-
 # Listar Fornecedores
 @login_required(login_url="/login")
 def fornecedores(request):
@@ -53,6 +72,78 @@ def fornecedores(request):
 		}
 	return render(request, 'core/fornecedor/listar.html', context)
 
+#####################################################################
+######### Fornecedores  Pessoa Juridica #############################
+#####################################################################
+
+@login_required(login_url="/login")
+def editar_fornecedor_pessoa_juridica(request, slug):
+    post = get_object_or_404(Fornecedor, slug=slug)
+    if request.method == "POST":
+        form = FornecedorPessoaJuridicaForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.editado_por = request.user.username
+            messages.success(request, 'Editado com sucesso!')
+            post.save()
+            return redirect('editar_fornecedor_pessoa_juridica', slug=post.slug)
+    else:
+        form = FornecedorForm(instance=post)
+    return render(request, 'core/fornecedor/editar.html', {'form': form})
+
+#Criar Fornecedor Pessoa Juridica
+@login_required(login_url="/login")
+def criar_fornecedor_pessoa_juridica(request):
+	form = FornecedorPessoaJuridicaForm(request.POST or None)
+	if request.method == 'POST':
+		if form.is_valid():
+			salvar = form.save(commit=False)
+			salvar.criado_por = request.user
+			salvar.slug = slugify(salvar.nome_fantasia)
+			salvar.save()
+			return redirect('fornecedores')
+		else:
+			return render(request, 'core/fornecedor/criar.html', {'form':form})
+	else:
+		return render(request, 'core/fornecedor/criar.html', {'form':form})
+
+
+#####################################################################
+######### Fornecedores  Pessoa Física ###############################
+#####################################################################
+
+#Criar Fornecedor Pessoa Juridica
+@login_required(login_url="/login")
+def criar_fornecedor_pessoa_fisica(request):
+	form = FornecedorPessoaFisicaForm(request.POST or None)
+	if request.method == 'POST':
+		if form.is_valid():
+			salvar = form.save(commit=False)
+			salvar.criado_por = request.user
+			salvar.slug = slugify(salvar.nome_fantasia)
+			salvar.save()
+			return redirect('fornecedores')
+		else:
+			return render(request, 'core/fornecedor/criar_pessoa_fisica.html', {'form':form})
+	else:
+		return render(request, 'core/fornecedor/criar_pessoa_fisica.html', {'form':form})
+
+
+@login_required(login_url="/login")
+def editar_fornecedor_pessoa_fisica(request, slug):
+    post = get_object_or_404(Fornecedor, slug=slug)
+    if request.method == "POST":
+        form = FornecedorPessoaFisicaForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.editado_por = request.user.username
+            messages.success(request, 'Editado com sucesso!')
+            post.save()
+            return redirect('editar_fornecedor_pessoa_fisica', slug=post.slug)
+    else:
+        form = FornecedorPessoaFisicaForm(instance=post)
+    return render(request, 'core/fornecedor/editar.html', {'form': form})
+
 # Detalhe do Fornecedor
 @login_required(login_url="/login")
 def fornecedor_detalhe(request, slug):
@@ -77,6 +168,10 @@ def criar_fornecedor(request):
 			return render(request, 'core/fornecedor/criar.html', {'form':form})
 	else:
 		return render(request, 'core/fornecedor/criar.html', {'form':form})
+
+
+
+
 
 @login_required(login_url="/login")
 def remove_fornecedor(request, slug):
@@ -117,7 +212,7 @@ def produtos(request):
 		q = request.POST['q']
 
 		if q:
-			lista_aux = Produto.objects.filter(Q(nome__contains=q) | Q(codigo_barras=q) ).order_by('-id')
+			lista_aux = Produto.objects.filter(Q(descricao__contains=q) ).order_by('-id')
 		else:
 			lista_aux = Produto.objects.all().order_by('-id')
 	else:
@@ -140,16 +235,11 @@ def produtos(request):
 def detalhe_produto(request, slug):
 
 	produto =  get_object_or_404(Produto, slug=slug)
-	lucro = produto.valor_venda - produto.valor_compra 
-	lucro_total = lucro * Decimal(produto.quantidade)
-	valor_capital = produto.valor_compra * Decimal(produto.quantidade)
+
 
 	context = {
 
 		'produto':produto,
-		'lucro':lucro,
-		'lucro_total':lucro_total,
-		'valor_capital':valor_capital,
 
 
 	}
@@ -158,12 +248,12 @@ def detalhe_produto(request, slug):
 
 @login_required(login_url="/login")
 def criar_produto(request):
-	form = ProdutoForm(request.POST or None)
+	form = ProdutoForm(request.POST, request.FILES or None)
 	if request.method == 'POST':
 		if form.is_valid():
 			salvar = form.save(commit=False)
 			salvar.criado_por = request.user
-			salvar.slug = slugify(salvar.nome)
+			salvar.slug = slugify(salvar.codigo_de_barras)
 			salvar.save()
 			return redirect('produtos')
 		else:
@@ -273,7 +363,7 @@ def editar_categoria(request, slug):
 #####################################################################
 
 @login_required(login_url="/login")
-def clientes(request):	
+def clientes(request):
 	if request.method == 'POST':
 		q = request.POST['q']
 
@@ -307,12 +397,12 @@ def detalhe_cliente(request, slug):
 
 @login_required(login_url="/login")
 def criar_cliente(request):
-	form = ClienteForm(request.POST, request.FILES or None)
+	form = ClientePessoaJuridicaForm(request.POST, request.FILES or None)
 	if request.method == 'POST':
 		if form.is_valid():
 			salvar = form.save(commit=False)
 			salvar.criado_por = request.user
-			salvar.slug = slugify(salvar.nome)
+			salvar.slug = slugify(salvar.nome_fantasia)
 			salvar.save()
 			return redirect('clientes')
 		else:

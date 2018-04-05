@@ -12,7 +12,7 @@
 		<h2 class="fa fa-truck fa-2x">  Fornecedores</h2>
 	</div>
 	<div class="col-md-6 text-right">
-		<a href="{% url 'criar_fornecedor' %}" class="btn btn-dark">Novo</a>
+		<a href="{% url 'criar_fornecedor_pessoa_juridica' %}" class="btn btn-dark">Novo</a>
 	</div>
 </div>
 <hr>
@@ -32,21 +32,26 @@
 <table class="table table-striped ">
   <thead>
     <tr>
-      <th scope="col">CNPJ/CPF</th>
       <th scope="col">Nome</th>
-      <th scope="col">Cidade</th>
+      <th scope="col" >Tipo</th>
       <th scope="col" ></th>
     </tr>
   </thead>
   <tbody>
   	{% for l in lista %}
     <tr>
-      <th scope="row">{{ l.cnpj_cpf }}</th>
-      <td>{{ l.nome }}</td>
-      <td>{{ l.cidade }}</td>
+      <th scope="row">{{ l.nome_fantasia }}</th>
+      <th scope="row">
+      {% if l.pessoa_juridica == True %}
+          <label>Pesoa Jurídica</label>
+      {% else %}
+          <label>Pesoa Física</label>
+      {% endif %}
+     </th>
       <td class="text-right">
       	<a href="{% url 'fornecedor_detalhe' l.slug %}" class="btn btn-light btn-sm fa fa-eye" title="Ver Detalhe"></a>
       </td>
+
     </tr>
    	{% endfor %}
   </tbody>

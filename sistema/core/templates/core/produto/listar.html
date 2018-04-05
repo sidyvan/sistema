@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% block content %}
+
  <!-- Breadcrumbs-->
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -7,15 +8,15 @@
         </li>
          <li class="breadcrumb-item active">Produtos</li>
       </ol>
-<div class="row">
-	<div class="col-md-6">
-		<h2 class="fa fa-shopping-bag fa-2x">  Produtos</h2>
-	</div>
-	<div class="col-md-6 text-right">
-		<a href="{% url 'criar_produto' %}" class="btn btn-dark">Novo</a>
-	</div>
-</div>
-<hr>
+      <div class="row">
+      	<div class="col-md-6">
+      		<h2 class="fa fa-shopping-bag fa-2x">  Produtos</h2>
+      	</div>
+      	<div class="col-md-6 text-right">
+      		<a href="{% url 'criar_produto' %}" class="btn btn-dark">Novo</a>
+      	</div>
+      </div>
+      <hr>
 
   <form method="POST"> {% csrf_token %}
     <div class="row">
@@ -29,28 +30,34 @@
   </form>
 
 <hr>
-<table class="table table-striped ">
-  <thead>
-    <tr>
-      <th scope="col" width="10%">Código</th>
-      <th scope="col" >Nome</th>
-      <th scope="col"></th>
-      
-    </tr>
-  </thead>
-  <tbody>
-  	{% for l in lista %}
-    <tr>
-      <th scope="row">{{ l.codigo_barras }}</th>
-      <td>{{ l.nome }}</td>
+<div class="card-deck">
 
-      <td class="text-right">
-      	<a href="{% url 'detalhe_produto' l.slug %}" class="btn btn-light btn-sm fa fa-eye" title="Ver Detalhe"></a>
-      </td>
-    </tr>
-   	{% endfor %}
-  </tbody>
-</table>
+  {% for l in lista %}
+
+  <div class="card">
+    <img class="card-img-top" src="{{ l.imagem.url }}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">R$ {{ l.valor_venda }}</h5>
+
+      <p class="card-text">
+        Qtn: {{ l.unidade }}
+        <hr>
+        {{ l.descricao }}
+      </p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">
+        <a href="{% url 'detalhe_produto' l.slug %}" class="btn btn-secondary btn-sm">Detalhe</a>
+        <a href="{% url 'editar_produto' l.slug  %}" class="btn btn-secondary btn-sm">Editar</a>
+      </small>
+    </div>
+  </div>
+
+  {% endfor %}
+
+</div>
+
+<hr>
 
 <div class="pagination">
     <span class="step-links">
