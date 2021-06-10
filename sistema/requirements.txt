@@ -4,7 +4,7 @@ cffi==1.11.5
 chardet==3.0.4
 cryptography==2.2.2
 defusedxml==0.5.0
-Django==1.11
+Django==2.2.24
 django-widget-tweaks==1.4.1
 eight==0.4.2
 future==0.16.0
